@@ -1,0 +1,17 @@
+<?php
+
+use Drupal\wdg_support_monitor\WDG_Support_Monitor;
+
+/**
+ * Implements hook_install().
+ */
+function wdg_support_monitor_install() {
+	\Drupal::state()->set( WDG_Support_Monitor::LAST_RUN_KEY, NULL );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function wdg_support_monitor_uninstall() {
+	\Drupal::state()->delete( WDG_Support_Monitor::LAST_RUN_KEY );
+}

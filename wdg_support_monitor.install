@@ -1,6 +1,10 @@
 <?php
+/**
+ * @file Install
+ * @author Web Development Group (WDG) <https://www.webdevelopmentgroup.com>
+ */
 
-use Drupal\wdg_support_monitor\WDG_Support_Monitor;
+use Drupal\WDGDC\WDG_Support_Monitor;
 
 /**
  * Implements hook_install().

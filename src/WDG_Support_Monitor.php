@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wdg_support_monitor;
+namespace Drupal\WDGDC;
 
 use Drupal\Core\Utility\ProjectInfo;
 
@@ -26,6 +26,13 @@ final class WDG_Support_Monitor {
    * @var string
    */
   private $api_secret = '';
+
+  /**
+   * Site URL
+   *
+   * @var string
+   */
+  private $url = '';
 
   /**
    * Last run data
@@ -74,6 +81,8 @@ final class WDG_Support_Monitor {
     } else {
       $this->api_secret = hash( 'sha256', php_uname( 'n' ) );
     }
+
+    $this->url = $GLOBALS['base_url'];
   }
 
   /**
@@ -83,14 +92,11 @@ final class WDG_Support_Monitor {
    * @return object
    */
   public function info() {
-    // Site URL
-    $url = $GLOBALS['base_url'];
-
     $data = new \StdClass;
     $data->api_endpoint = $this->api_endpoint;
     $data->api_secret = $this->api_secret;
-    $data->url = $url;
-    
+    $data->url = $this->url;
+
     return $data;
   }
 
@@ -227,22 +233,16 @@ final class WDG_Support_Monitor {
    * Compile report data
    *
    * @access private
+   * @param int $timestamp Compile timestamp
    * @return object
    */
-  private function compile() {
-    // Site URL
-    $url = $GLOBALS['base_url'];
-
-    // Current timestamp
-    $timestamp = REQUEST_TIME;
-
+  private function compile( $timestamp ) {
     // Key is hash of site URL, secret, and timestamp
-    $key = hash( 'sha256', $url . $this->api_secret . $timestamp );
+    $key = hash( 'sha256', $this->url . $this->api_secret . $timestamp );
 
-    // Compile data    
+    // Compile data
     $data = new \StdClass;
-    $data->cms = 'Drupal 8';
-    $data->url = $url;
+    $data->url = $this->url;
     $data->timestamp = $timestamp;
     $data->key = $key;
     $data->core = $this->compile_core();
@@ -258,7 +258,7 @@ final class WDG_Support_Monitor {
    * @return object
    */
   public function report() {
-    return $this->compile();
+    return $this->compile( REQUEST_TIME );
   }
 
   /**
@@ -278,7 +278,7 @@ final class WDG_Support_Monitor {
       return sprintf( 'Invalid API Endpoint! %s', $this->api_endpoint );
     }
 
-    $data = $this->compile();
+    $data = $this->compile( REQUEST_TIME );
     
     $options = array(
       'body' => json_encode( $data ),
@@ -289,13 +289,9 @@ final class WDG_Support_Monitor {
 
     $response = \Drupal::httpClient()->post( $this->api_endpoint, $options );
 
-    if ( $response->getStatusCode() !== 200 ) {
-      // Failed!
-      return sprintf( 'Unable to update! Response code: %s', $response->getStatusCode() );
-    }
-
-    // Assume success
+    // Store last run regardless of success
     $last_run = new \StdClass();
+    $last_run->success = $response->getStatusCode() >= 200 && $response->getStatusCode() < 300;
     $last_run->timestamp = REQUEST_TIME;
     $last_run->request = new \StdClass();
     $last_run->request->url = $this->api_endpoint;
@@ -305,6 +301,11 @@ final class WDG_Support_Monitor {
     $last_run->response->headers = $response->getHeaders();
     $last_run->response->body = $response->getBody();
     $this->set_last_run( $last_run );
+
+    if ( ! $last_run->success ) {
+      // Failed!
+      return sprintf( 'Unable to update! Response code: %s', $response->getStatusCode() );
+    }
 
     return $last_run;
   }

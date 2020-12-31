@@ -4,18 +4,18 @@
  * @author Web Development Group (WDG) <https://www.webdevelopmentgroup.com>
  */
 
-use Drupal\WDGDC\WDG_Support_Monitor;
+use Drupal\wdg_support_monitor\SupportMonitor;
 
 /**
  * Implements hook_install().
  */
 function wdg_support_monitor_install() {
-	\Drupal::state()->set( WDG_Support_Monitor::LAST_RUN_KEY, NULL );
+	\Drupal::state()->set( SupportMonitor::LAST_RUN_KEY, NULL );
 }
 
 /**
  * Implements hook_uninstall().
  */
 function wdg_support_monitor_uninstall() {
-	\Drupal::state()->delete( WDG_Support_Monitor::LAST_RUN_KEY );
+	\Drupal::state()->delete( SupportMonitor::LAST_RUN_KEY );
 }

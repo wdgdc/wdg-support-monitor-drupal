@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\WDGDC;
+namespace Drupal\wdg_support_monitor;
 
 use Drupal\Core\Utility\ProjectInfo;
 
-final class WDG_Support_Monitor {
+final class SupportMonitor {
 
   /**
    * Name of our last run setting
@@ -135,7 +135,7 @@ final class WDG_Support_Monitor {
    * Note: this is very intensive and should not be done on the front-end
    *
    * @see \Drupal\Update\UpdateManager::getProjects() internal functions to generate project list with enabled and disabled modules
-   * 
+   *
    * @access private
    * @return array|false
    */
@@ -153,7 +153,7 @@ final class WDG_Support_Monitor {
     if ( empty( $available ) ) {
       return FALSE;
     }
-    
+
     // @see \Drupal::service('update.manager')->getProjects();
     $projects = array();
     $module_data = system_rebuild_module_data();
@@ -188,7 +188,7 @@ final class WDG_Support_Monitor {
    * @access private
    * @return object
    */
-  private function compile_core() {    
+  private function compile_core() {
     $data = new \StdClass();
     $data->current = VERSION;
 
@@ -279,7 +279,7 @@ final class WDG_Support_Monitor {
     }
 
     $data = $this->compile( REQUEST_TIME );
-    
+
     $options = array(
       'body' => json_encode( $data ),
       'headers' => array(

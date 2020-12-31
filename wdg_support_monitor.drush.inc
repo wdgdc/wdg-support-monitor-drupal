@@ -8,7 +8,7 @@
  * @code drush wdg-support-monitor-report
  */
 
-use Drupal\WDGDC\WDG_Support_Monitor;
+use Drupal\wdg_support_monitor\SupportMonitor;
 
 /**
  * Implements hook_drush_command().
@@ -54,7 +54,7 @@ function drush_wdg_support_monitor_info() {
 
   // Info
   $info = $wdg_support_monitor->info();
-  
+
   // Last Run
   $info->last_run = $wdg_support_monitor->get_last_run();
 
@@ -96,7 +96,7 @@ function drush_wdg_support_monitor_update() {
  */
 function drush_wdg_support_monitor_report() {
   drush_log( 'Generating report...', 'ok' );
-  
+
   $wdg_support_monitor = WDG_Support_Monitor::get_instance();
 
   $data = $wdg_support_monitor->report();

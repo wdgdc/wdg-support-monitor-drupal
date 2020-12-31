@@ -4,7 +4,7 @@
  * @author Web Development Group (WDG) <https://www.webdevelopmentgroup.com>
  */
 
-use Drupal\WDGDC\WDG_Support_Monitor;
+use \Drupal\wdg_support_monitor\SupportMonitor;
 
 /**
  * Implements hook_cron().
@@ -12,7 +12,7 @@ use Drupal\WDGDC\WDG_Support_Monitor;
 function wdg_support_monitor_cron() {
   $frequency = 60 * 60 * 12; // 12 hours
 
-  $wdg_support_monitor = WDG_Support_Monitor::get_instance();
+  $wdg_support_monitor = SupportMonitor::get_instance();
 
   $last_run = $wdg_support_monitor->get_last_run();
   if ( is_null( $last_run ) || empty( $last_run->success) || empty( $last_run->timestamp ) || REQUEST_TIME - $last_run['timestamp'] > $frequency ) {

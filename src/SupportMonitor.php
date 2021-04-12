@@ -3,6 +3,7 @@
 namespace Drupal\wdg_support_monitor;
 
 use Drupal\Core\Utility\ProjectInfo;
+use \Drupal\update\Controller\UpdateController;
 
 final class SupportMonitor {
 
@@ -144,41 +145,19 @@ final class SupportMonitor {
       return $this->project_data;
     }
 
-    // @TODO!
-    return FALSE;
+    // if ($available = update_get_available(TRUE)) {
+    //     module_load_include('inc', 'update', 'update.compare');
+    //     $data1 = update_calculate_project_data($available);
+    // }
 
-    // Trigger update fetch
-    // @FIXME
-    $available = update_get_available( TRUE );
-    if ( empty( $available ) ) {
-      return FALSE;
-    }
 
-    // @see \Drupal::service('update.manager')->getProjects();
-    $projects = array();
-    $module_data = system_rebuild_module_data();
-    $theme_data = $this->themeHandler->rebuildThemeData(); // @FIXME
-    $project_info = new ProjectInfo();
-    $project_info->processInfoList($this->projects, $module_data, 'module', TRUE);
-    $project_info->processInfoList($this->projects, $module_data, 'module', FALSE);
-    $project_info->processInfoList($this->projects, $theme_data, 'theme', TRUE);
-    $project_info->processInfoList($this->projects, $theme_data, 'theme', FALSE);
+    $updateManager = \Drupal::getContainer()->get('update.manager');
+    $updateController = new UpdateController($updateManager);
+    $data = $updateController->updateStatus()['#data'];
 
-    // @FIXME
-    // @see update_calculate_project_data()
-    update_process_project_info( $projects );
-    foreach( $projects as $project => $project_info ) {
-      if ( isset( $available[ $project ] ) ) {
-        // Sets ['recommended'] key
-        // @FIXME
-        update_calculate_project_update_status( $project, $projects[ $project ], $available[ $project ] );
-      } else {
-        // Update unknown
-      }
-    }
 
     // Store project data
-    $this->project_data = $projects;
+    $this->project_data = $data;
     return $this->project_data;
   }
 
@@ -190,9 +169,10 @@ final class SupportMonitor {
    */
   private function compile_core() {
     $data = new \StdClass();
-    $data->current = VERSION;
+    $data->current = \Drupal::VERSION;
 
     $project_data = $this->get_project_data();
+
     $data->recommended = ! empty( $project_data['drupal']['recommended'] ) ? $project_data['drupal']['recommended'] : NULL;
 
     return $data;
@@ -227,6 +207,20 @@ final class SupportMonitor {
     }
 
     return $data;
+  }
+
+
+  private function getData() {
+    // if ($available = update_get_available(TRUE)) {
+    //     module_load_include('inc', 'update', 'update.compare');
+    //     $data1 = update_calculate_project_data($available);
+    // }
+
+
+    $updateManager = \Drupal::getContainer()->get('update.manager');
+    $updateController = new UpdateController($updateManager);
+    $data = $updateController->updateStatus()['#data'];
+
   }
 
   /**

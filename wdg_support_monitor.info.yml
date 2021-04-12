@@ -4,3 +4,9 @@ description: 'Monitors site status for support.'
 version: 0.2.0
 package: Support
 core: 8.x
+
+services:
+  drush9_custom_commands.commands:
+    class: \Drupal\drush9_custom_commands\Commands\Drush9CustomCommands
+    tags:
+      - { name: drush.command }

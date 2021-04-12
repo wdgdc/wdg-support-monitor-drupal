@@ -1,0 +1,5 @@
+services:
+  wdg_support_monitor.commands:
+    class: \Drupal\wdg_support_monitor\Commands\SupportMonitorCommands
+    tags:
+      - { name: drush.command }

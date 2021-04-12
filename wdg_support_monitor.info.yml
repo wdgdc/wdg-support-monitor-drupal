@@ -1,7 +1,7 @@
 name: WDG Support Monitor
 type: module
 description: 'Monitors site status for support.'
-version: 0.2.0
+version: 1.0.0
 package: Support
 core: 8.x
 

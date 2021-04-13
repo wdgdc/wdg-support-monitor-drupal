@@ -15,7 +15,7 @@ function wdg_support_monitor_cron() {
   $wdg_support_monitor = SupportMonitor::get_instance();
 
   $last_run = $wdg_support_monitor->get_last_run();
-  if ( is_null( $last_run ) || empty( $last_run->success) || empty( $last_run->timestamp ) || REQUEST_TIME - $last_run['timestamp'] > $frequency ) {
+  if ( is_null( $last_run ) || empty( $last_run->success) || empty( $last_run->timestamp ) || REQUEST_TIME - $last_run->timestamp > $frequency ) {
     $wdg_support_monitor->update( FALSE );
   }
 }

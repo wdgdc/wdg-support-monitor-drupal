@@ -1,5 +1,5 @@
 {
-    "name": "wdgdc/wdg-support-monitor",
+    "name": "wdgdc/wdg_drupal_support_monitor",
     "description": "A core and module monitor for Drupal",
     "type": "drupal-custom-module",
     "homepage": "https://www.webdevelopmentgroup.com/",

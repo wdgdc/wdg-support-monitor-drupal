@@ -82,7 +82,7 @@ final class SupportMonitor {
     } else {
       $this->api_secret = hash( 'sha256', php_uname( 'n' ) );
     }
-
+	
     $this->url = $GLOBALS['base_url'];
   }
 
@@ -93,10 +93,17 @@ final class SupportMonitor {
    * @return object
    */
   public function info() {
+
+    $url = $this->url;
+
+    if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
+      $url = WDG_SUPPORT_MONITOR_SITE_URL;
+    }
+	
     $data = new \StdClass;
     $data->api_endpoint = $this->api_endpoint;
     $data->api_secret = $this->api_secret;
-    $data->url = $this->url;
+    $data->url = $url;
 
     return $data;
   }
@@ -234,9 +241,15 @@ final class SupportMonitor {
     // Key is hash of site URL, secret, and timestamp
     $key = hash( 'sha256', $this->url . $this->api_secret . $timestamp );
 
+    $url = $this->url;
+
+    if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
+      $url = WDG_SUPPORT_MONITOR_SITE_URL;
+    }
+	
     // Compile data
     $data = new \StdClass;
-    $data->url = $this->url;
+    $data->url = $url;
     $data->timestamp = $timestamp;
     $data->key = $key;
     $data->core = $this->compile_core();

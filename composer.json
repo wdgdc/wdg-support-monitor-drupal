@@ -1,0 +1,20 @@
+{
+    "name": "wdgdc/wdg_drupal_support_monitor",
+    "description": "A core and module monitor for Drupal",
+	"type": "drupal-module",
+    "homepage": "https://www.webdevelopmentgroup.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "The Web Development Group",
+            "email": "info@wdg.co",
+            "homepage": "https://wdg.co"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wdgdc\\WdgSupportMonitor\\": "src/"
+        }
+    },
+    "require": {}
+}

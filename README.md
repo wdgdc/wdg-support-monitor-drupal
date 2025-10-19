@@ -1,4 +1,4 @@
-# WDG Drupal 8/9 Support Monitor
+# WDG Drupal 9/10 Support Monitor
 
 ## Installation
 

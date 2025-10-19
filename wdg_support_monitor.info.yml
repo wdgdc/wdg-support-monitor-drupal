@@ -1,12 +1,6 @@
 name: WDG Support Monitor
 type: module
 description: 'Monitors site status for support.'
-version: 1.0.0
+version: 1.1.0
 package: Support
-core: 8.x
-
-services:
-  drush9_custom_commands.commands:
-    class: \Drupal\drush9_custom_commands\Commands\Drush9CustomCommands
-    tags:
-      - { name: drush.command }
+core_version_requirement: ^9 || ^10

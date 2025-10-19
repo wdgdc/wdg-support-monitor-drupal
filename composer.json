@@ -1,7 +1,7 @@
 {
     "name": "wdgdc/wdg_drupal_support_monitor",
     "description": "A core and module monitor for Drupal",
-    "type": "drupal-custom-module",
+	"type": "drupal-module",
     "homepage": "https://www.webdevelopmentgroup.com/",
     "license": "MIT",
     "authors": [

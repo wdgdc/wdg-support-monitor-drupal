@@ -205,7 +205,7 @@ final class SupportMonitor {
       $addon->type = preg_replace( '/-disabled$/', '', $project['project_type'] ); // Strip -disabled suffix
       $addon->current = $project['existing_version'];
       $addon->recommended = ! empty( $project['recommended'] ) ? $project['recommended'] : NULL;
-      $addon->active = $project['project_status'];
+      $addon->active = (bool) $project['project_status'];
 
       array_push( $data, $addon );
     }

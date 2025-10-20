@@ -84,6 +84,11 @@ final class SupportMonitor {
     }
 
     $this->url = $GLOBALS['base_url'];
+    
+    if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
+        $this->url = WDG_SUPPORT_MONITOR_SITE_URL;
+    }
+    
   }
 
   /**
@@ -94,16 +99,10 @@ final class SupportMonitor {
    */
   public function info() {
 
-    $url = $this->url;
-
-    if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
-      $url = WDG_SUPPORT_MONITOR_SITE_URL;
-    }
-
     $data = new \StdClass;
     $data->api_endpoint = $this->api_endpoint;
     $data->api_secret = $this->api_secret;
-    $data->url = $url;
+    $data->url = $this->url;
 
     return $data;
   }
@@ -238,15 +237,9 @@ final class SupportMonitor {
     // Key is hash of site URL, secret, and timestamp
     $key = hash( 'sha256', $this->url . $this->api_secret . $timestamp );
 
-    $url = $this->url;
-
-    if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
-      $url = WDG_SUPPORT_MONITOR_SITE_URL;
-    }
-
     // Compile data
     $data = new \StdClass;
-    $data->url = $url;
+    $data->url = $this->url;
     $data->timestamp = $timestamp;
     $data->key = $key;
     $data->core = $this->compile_core();
@@ -262,7 +255,8 @@ final class SupportMonitor {
    * @return object
    */
   public function report() {
-    return $this->compile( REQUEST_TIME );
+    $request_time = \Drupal::time()->getRequestTime();
+    return $this->compile( $request_time );
   }
 
   /**
@@ -282,7 +276,9 @@ final class SupportMonitor {
       return sprintf( 'Invalid API Endpoint! %s', $this->api_endpoint );
     }
 
-    $data = $this->compile( REQUEST_TIME );
+    $request_time = \Drupal::time()->getRequestTime();
+
+    $data = $this->compile( $request_time );
 
     $options = array(
       'body' => json_encode( $data ),
@@ -296,7 +292,7 @@ final class SupportMonitor {
     // Store last run regardless of success
     $last_run = new \StdClass();
     $last_run->success = $response->getStatusCode() >= 200 && $response->getStatusCode() < 300;
-    $last_run->timestamp = REQUEST_TIME;
+    $last_run->timestamp = $request_time;
     $last_run->request = new \StdClass();
     $last_run->request->url = $this->api_endpoint;
     $last_run->request->options = $options;

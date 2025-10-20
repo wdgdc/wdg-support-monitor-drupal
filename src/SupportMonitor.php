@@ -82,7 +82,7 @@ final class SupportMonitor {
     } else {
       $this->api_secret = hash( 'sha256', php_uname( 'n' ) );
     }
-	
+
     $this->url = $GLOBALS['base_url'];
   }
 
@@ -99,7 +99,7 @@ final class SupportMonitor {
     if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
       $url = WDG_SUPPORT_MONITOR_SITE_URL;
     }
-	
+
     $data = new \StdClass;
     $data->api_endpoint = $this->api_endpoint;
     $data->api_secret = $this->api_secret;
@@ -152,14 +152,11 @@ final class SupportMonitor {
       return $this->project_data;
     }
 
-    // if ($available = update_get_available(TRUE)) {
-    //     module_load_include('inc', 'update', 'update.compare');
-    //     $data1 = update_calculate_project_data($available);
-    // }
+    $updateController = UpdateController::create(
+      \Drupal::getContainer(),
+      \Drupal::service('renderer')
+    );
 
-
-    $updateManager = \Drupal::getContainer()->get('update.manager');
-    $updateController = new UpdateController($updateManager);
     $data = $updateController->updateStatus()['#data'];
 
 
@@ -246,7 +243,7 @@ final class SupportMonitor {
     if ( defined( 'WDG_SUPPORT_MONITOR_SITE_URL' ) && ! empty( WDG_SUPPORT_MONITOR_SITE_URL ) ) {
       $url = WDG_SUPPORT_MONITOR_SITE_URL;
     }
-	
+
     // Compile data
     $data = new \StdClass;
     $data->url = $url;
